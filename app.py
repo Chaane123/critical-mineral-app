@@ -356,13 +356,13 @@ def investor_dashboard():
 
     # convert charts to HTML using plotly
     try:
-        fig_trends = px.line(prod_summary, x='Year', y='Production_tonnes', color='MineralName', title='Production Trends by Mineral', markers=True)  # line chart for trends
+        
+    except Exception:
+        trends_html = '<p>Charts unavailable.</p>'  # fallback if chart fails
+        export_html = '<p>Charts unavailable.</p>'fig_trends = px.line(prod_summary, x='Year', y='Production_tonnes', color='MineralName', title='Production Trends by Mineral', markers=True)  # line chart for trends
         fig_export = px.bar(mineral_overview, x='MineralName', y='ExportValue_BillionUSD', title=f'Export Value by Mineral ({years_label})')  # bar chart for export value
         trends_html = pio.to_html(fig_trends, full_html=False)  # convert line chart to HTML
         export_html = pio.to_html(fig_export, full_html=False)  # convert bar chart to HTML
-    except Exception:
-        trends_html = '<p>Charts unavailable.</p>'  # fallback if chart fails
-        export_html = '<p>Charts unavailable.</p>'
 
     # Provide a simple loss/profit hint: compare export value growth year-over-year
     yoy = production_df.groupby('Year')['ExportValue_BillionUSD'].sum().pct_change().fillna(0)  # compute year-over-year % change
